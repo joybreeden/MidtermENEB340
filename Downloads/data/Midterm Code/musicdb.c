@@ -342,19 +342,150 @@ size_t db_search(const MusicDB *db, song_pred pred, const void *key, const Song 
     }
     return j;
 }
-void db_sort(MusicDB *db, int card){//  TODO: Program
+void db_sort(MusicDB *db, int card){//  TODO: Program imma just do selection sort bc it easy to code 
+    int mini;
+    int maxi;
     switch(card){
-        case 0://rating descending, then num_rated descending then id accending
-             
+        case 0://rating descending, then num_rated descending then id accending DONE
+             if(debug2)printf("test");
+            for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->id < db->songs[mini]->id){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                maxi = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->num_rated > db->songs[maxi]->num_rated){
+                        maxi = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[maxi];
+                db->songs[maxi] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                maxi = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->rating > db->songs[maxi]->rating){
+                        maxi = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[maxi];
+                db->songs[maxi] = temp;
+             }
         break;
-        case 1://year ascending, then title ascending (strcmp byte order) then id ascending 
-
+        case 1://year ascending, then title ascending (strcmp byte order) then id ascending DONE
+             for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->id < db->songs[mini]->id){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(strcmp(db->songs[j]->title,db->songs[mini]->title) < 0){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->year < db->songs[mini]->year){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
         break;
-        case 2://artist name ascending (strcmp), then year descending then id ascending
-
+        case 2://artist name ascending (strcmp), then year descending then id ascending DONE
+             for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->id < db->songs[mini]->id){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                maxi = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->year > db->songs[maxi]->year){
+                        maxi = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[maxi];
+                db->songs[maxi] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(strcmp(db->songs[j]->artist->name,db->songs[mini]->artist->name) < 0){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
         break;
-        case 3://num_rated descending, then rating descending then id ascending 
-
+        case 3://num_rated descending, then rating descending then id ascending DONE
+             for(int i = 0; i < db->numSongs -1; i++){
+                mini = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->id < db->songs[mini]->id){
+                        mini = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[mini];
+                db->songs[mini] = temp;
+             }
+             for(int i = 0; i < db->numSongs -1; i++){
+                maxi = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->rating > db->songs[maxi]->rating){
+                        maxi = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[maxi];
+                db->songs[maxi] = temp;
+             }
+              for(int i = 0; i < db->numSongs -1; i++){
+                maxi = i;
+                for(int j = i+1; j < db->numSongs; j++ ){
+                    if(db->songs[j]->num_rated > db->songs[maxi]->num_rated){
+                        maxi = j;
+                    }
+                }
+                Song *temp = db->songs[i];
+                db->songs[i] = db->songs[maxi];
+                db->songs[maxi] = temp;
+             }
         break;
         default: return;
     }
@@ -408,11 +539,11 @@ const Artist *db_top_artist(const MusicDB *db){//returns NULL if db is empty oth
     if(debug)printf("%s, %d\n",best->name, best->n_songs);
     return best;
 }
-void test_db_get(const MusicDB *db, size_t i){
+/*void test_db_get(const MusicDB *db, size_t i){
     Song *song = db_get(db, i);
     printf("Song Title: %s, Rating: %f, num_rated: %d", song->title,song->rating, song->num_rated);
 }
 void test_top_artist(const MusicDB *db){
     Artist *artist = db_top_artist(db);
     printf("Name: %s, nSongs: %d",artist->name,artist->n_songs);
-}
+}*/
