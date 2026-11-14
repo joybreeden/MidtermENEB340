@@ -1,17 +1,21 @@
 #include "musicdb.h"
 
-struct Song {                  
-    float          rating;       
-    const Artist  *artist;          
-    int            year;            
-    char          *title;           
-    unsigned long  num_rated;     
-    unsigned int   id;              
-};  
 
-struct Artist {
-    char    *name;      /* owned copy of the name; unique within one MusicDB   */
-    size_t   n_songs;   /* number of songs by this artist                      */
-    size_t   cap;       /* capacity of the songs array                         */
-    Song   **songs;     /* owned array of (non-owning) pointers to the songs   */
-};
+int main(){
+    FILE *file = fopen("test.txt","w");
+    if(file == NULL){
+        printf("File failed to open");
+        return 1;
+    }
+
+
+    MusicDB *testDB = db_create();
+    if(!db_push(testDB, "ABCs", "Unknown", 4.89, 1999, 20930493)){
+        printf("push succeeded\n");
+        db_disp(testDB,file,0 );
+        printf("printed to file");
+    }else{
+        printf("push failed");
+    }
+
+}
