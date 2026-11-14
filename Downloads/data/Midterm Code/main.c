@@ -15,10 +15,11 @@ int main(){
     if(!db_push(testDB, "ABCs", "Unknown", 4.89, 1999, 20930493)){
         printf("push succeeded\n");
         db_disp(testDB,file,0 );
-        printf("printed to file");
+        printf("printed to file\n");
     }else{
-        printf("push failed");
+        printf("push failed\n");
     }
     fclose(file);
-
+    printf("Num Songs %d, Num Artitists %d\n",db_song_count(testDB),db_artist_count(testDB));
+    printf("Num between 2000 and 2009: %d",db_count_decade(testDB,2000,NULL));
 }

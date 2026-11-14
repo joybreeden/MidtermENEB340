@@ -46,7 +46,7 @@ MusicDB *db_create(void){
         }
     return db;
 }
-void db_destroy(MusicDB *db){//unassigns and removes all pointers allowing memory to be reused 
+void db_destroy(MusicDB *db){//unassigns and removes all pointers allowing memory to be reused TODO: Test
     if(db == NULL){
         return;
     }if(db->songs != NULL){
@@ -74,13 +74,13 @@ void db_destroy(MusicDB *db){//unassigns and removes all pointers allowing memor
 int db_load(MusicDB *db, const char *dir){//Reads songs.txt, artists.txt, year.txt, ratings.txt and people_rated.txt TODO: program
     //FILE *songs
 }
-size_t        db_song_count(const MusicDB *db){// returns the number of songs in the database TODO: Test
+size_t db_song_count(const MusicDB *db){// returns the number of songs in the database DONE
     return db->numSongs;
 }
-size_t        db_artist_count(const MusicDB *db){//returns the number of songs in the database TODO: Test
+size_t db_artist_count(const MusicDB *db){//returns the number of songs in the database DONE
     return db->numArtists;
 }
-const Song  *db_get(const MusicDB *db, size_t i){//returns the song at position i if it exists otherwise returns null TODO: test
+const Song  *db_get(const MusicDB *db, size_t i){//returns the song at position i if it exists otherwise returns null TODO: Test
     if(i < db->numSongs){
         return db->songs[i];
     }
@@ -216,7 +216,19 @@ void db_sort(MusicDB *db, int card){// sort by num_rated decending then rating d
 }
 /* PTR-ONLY */
 size_t db_count_decade(const MusicDB *db, int start, const Song **best){//count the number of songs made from 1960 to 1969. if best isnt null have it point to song with highest rating 
-
+    size_t count = 0;
+    double rating = -10;
+    for(int i = 0; i< db->numSongs; i++){
+        if(db->songs[i]->year >= start && db->songs[i]->year <= start + 9){
+            if(debug)printf("year: %d, \n",db->songs[i]->year);
+            count++;
+            if(debug)printf("count: %d,\n",count);
+            if(best != NULL && db->songs[i]->rating > rating){
+                *best = db->songs[i];
+            }
+        }
+    }
+    return count;
 }
 /* PTR-ONLY */
 const Artist *db_top_artist(const MusicDB *db){//returns NULL if db is empty otherwise returns artist with most songs 
