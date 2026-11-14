@@ -10,6 +10,7 @@ int main(){
 
 
     MusicDB *testDB = db_create();
+    printf("db Created successfully\n");
     if(!db_push(testDB, "ABCs", "Unknown", 4.89, 1999, 20930493)){
         printf("push succeeded\n");
         db_disp(testDB,file,0 );
@@ -17,5 +18,6 @@ int main(){
     }else{
         printf("push failed");
     }
+    fclose(file);
 
 }

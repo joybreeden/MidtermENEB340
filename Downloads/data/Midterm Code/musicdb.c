@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define debug 1
 struct Song {                  
     float          rating;       
     const Artist  *artist;          
@@ -22,10 +23,18 @@ struct MusicDB{
     Artist **artists;
     size_t numSongs;
     size_t numArtists;
+    size_t maxSongs;
+    size_t maxArtists;
 };
 
 MusicDB *db_create(void){
-    return malloc(sizeof(MusicDB));//creates new MusicDB object and returns a poihnter to it
+    MusicDB *db =  malloc(sizeof(MusicDB));
+    db->maxArtists = 10;
+    db->maxSongs = 100;
+    db->numArtists = 0;
+    db->numSongs = 0;
+    db->artists = malloc(db->maxArtists * __SIZEOF_POINTER__);
+    db->songs = malloc(db->maxSongs * __SIZEOF_POINTER__);
 }
 void db_destroy(MusicDB *db){//unassigns and removes all pointers allowing memory to be reused 
     if(db == NULL){
@@ -71,49 +80,80 @@ int db_push(MusicDB *db, const char *title, const char *artist, double rating, i
     if(db == NULL || title == NULL || artist == NULL){
         return -1;
     }
-    Song song = {
-            .rating = rating,
-            .year = year,
-            .num_rated = num_rated,
-            .id = db->numSongs  
-        };
-    song.title = malloc(sizeof(artist));
-    strcpy(song.title, artist);
+    if(db->numSongs == db->maxSongs){
+        Song ** temp = db->songs;
+        db->songs = malloc((db->maxSongs + 100)* __SIZEOF_POINTER__);
+        for(int i = 0; i < db->maxSongs; i++){
+            db->songs[i] = temp[i];
+        }
+        db->maxSongs += 100;
+        free(temp);
+        temp == NULL;
+    }
+    if(db->numArtists == db-> maxArtists){
+        Artist ** temp = db->artists;
+        db->artists = malloc((db->maxArtists + 10)* __SIZEOF_POINTER__);
+        for(int i = 0; i < db->maxArtists; i++){
+            db->artists[i] = temp[i];
+        }
+        db->maxArtists += 10;
+        free(temp);
+        temp == NULL;
+    }
+    Song *song = malloc(sizeof(Song));
+         
+            song->rating = rating;
+            song->year = year;
+            song->num_rated = num_rated;
+            song->id = db->numSongs;
+  
+    song->title = malloc(strlen(title)+1);
+    strcpy(song->title, title);
+    if(debug)printf("song created successfully\n");
     int duplicate = 0;
     for(int i = 0; i< db->numArtists; i++){
         if(!strcmp(db->artists[i]->name, artist) ){
-            db->artists[i]->songs[db->artists[i]->n_songs] =&song;
+            db->artists[i]->songs[db->artists[i]->n_songs] =song;
             db->artists[i]->n_songs++;
-            song.artist = db-> artists[i];
+            song->artist = db-> artists[i];
             duplicate = 1;
         }
     }
+    if(debug)printf("checked for duplicates\n");
     if(!duplicate){
-        Artist art = {
-            .name = artist,
-            .n_songs = 0,
-            .cap = 5,
-            .songs = malloc(art.cap*sizeof(Song))
-        };
-        db->artists[db->numArtists] = &art;
+        Artist * art = malloc(sizeof(Artist));
+        
+            art->name = artist;
+            art->n_songs = 0;
+            art->cap = 10;
+            art->songs = malloc(art->cap*sizeof(Song));
+            art->songs[art->n_songs] = song;
+            art->n_songs++;
+            song->artist = art;
+        db->artists[db->numArtists] = art;
     }
-    db->songs[db->numSongs] = &song;
+    db->songs[db->numSongs] = song;
     db->numSongs++;
     return 0;
 }
 void db_disp(const MusicDB *db, FILE *out, size_t lim){// prints to file Each row: "%-35.35s %-25.25s %-5d %-8.2f %lu\n" (title, artist name, year, rating, number of raters). TODO:program 
     if(out == NULL){
+        if(debug)printf("null file\n");
         return;
     }
     fprintf(out,"%-35s %-25s %-5s %-8s %s\n","Song Title", "Artist", "Year", "Rating", "People Rated" );
+    if(debug)printf("printed header\n");
     if(lim == 0){
         for(int i = 0; i< db->numSongs; i++){
+            if(debug)printf("1 title %s",db->songs[i]->title);
             fprintf(out,"%-35.35s %-25.25s %-5d %-8.2f %lu\n",db->songs[i]->title,db->songs[i]->artist->name,db->songs[i]->year,db->songs[i]->rating,db->songs[i]->num_rated);
-
+            
         }
     }else{
+
         for(int i = 0;( i< db->numSongs) &&(i< lim); i++){
-            fprintf(out,"%-35.35s %-25.25s %-5d %-8.2f %lu\n",db->songs[i]->title,db->songs[i]->artist->name,db->songs[i]->year,db->songs[i]->rating,db->songs[i]->num_rated);
+            if(debug)printf("2 title %s\n",db->songs[i]->title);
+            fprintf(out,"%-35.35s %-25.25s %-5d %-8.2f %lu\n",*db->songs[i]->title,db->songs[i]->artist->name,db->songs[i]->year,db->songs[i]->rating,db->songs[i]->num_rated);
         }
     }
 }
