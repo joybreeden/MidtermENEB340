@@ -211,27 +211,48 @@ void db_disp(const MusicDB *db, FILE *out, size_t lim){//DONE
 size_t db_search(const MusicDB *db, song_pred pred, const void *key, const Song ***out){//determines which songs match key based on function pred which is defined by someone else TODO: program
 
 }
-void db_sort(MusicDB *db, int card){// sort by num_rated decending then rating decending then id acending TODO: Program
+void db_sort(MusicDB *db, int card){//  TODO: Program
+    switch(card){
+        case 0://rating descending, then num_rated descending then id accending
+             
+        break;
+        case 1://year ascending, then title ascending (strcmp byte order) then id ascending 
+
+        break;
+        case 2://artist name ascending (strcmp), then year descending then id ascending
+
+        break;
+        case 3://num_rated descending, then rating descending then id ascending 
+
+        break;
+        default: return;
+    }
+
 
 }
+
 /* PTR-ONLY */
-size_t db_count_decade(const MusicDB *db, int start, const Song **best){//count the number of songs made from 1960 to 1969. if best isnt null have it point to song with highest rating 
+size_t db_count_decade(const MusicDB *db, int start, const Song **best){// now ptr only TODO: test 
     size_t count = 0;
     double rating = -10;
-    for(int i = 0; i< db->numSongs; i++){
-        if(db->songs[i]->year >= start && db->songs[i]->year <= start + 9){
-            if(debug)printf("year: %d, \n",db->songs[i]->year);
+    Song **song = db->songs;
+    Song **lastSong = db->songs + db->numSongs;
+    while(song < lastSong){
+        if((*song)->year >= start && (*song)->year <= start + 9){
+            if(debug)printf("year: %d, \n",(*song)->year);
             count++;
             if(debug)printf("count: %d,\n",count);
-            if(best != NULL && db->songs[i]->rating > rating){
-                *best = db->songs[i];
+            if(best != NULL && (*song)->rating > rating){
+                *best = (*song);
+                rating = (*song)->rating;
             }
         }
+        song++;
     }
     return count;
 }
 /* PTR-ONLY */
-const Artist *db_top_artist(const MusicDB *db){//returns NULL if db is empty otherwise returns artist with most songs 
+const Artist *db_top_artist(const MusicDB *db){//returns NULL if db is empty otherwise returns artist with most songs TODO: program also figure out ptr only
 
 }
 
