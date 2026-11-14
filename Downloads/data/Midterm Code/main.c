@@ -11,6 +11,7 @@ int main(){
 
     MusicDB *testDB = db_create();
     printf("db Created successfully\n");
+    db_push(testDB, "Tmary had a little lamb", "Folk", 3.65, 2009, 2493);
     db_push(testDB, "Twinkle Twinkle", "Unknown", 3.65, 2009, 2493);
     if(!db_push(testDB, "ABCs", "Unknown", 4.89, 2000, 20930493)){
         printf("push succeeded\n");
@@ -21,5 +22,7 @@ int main(){
     }
     fclose(file);
     printf("Num Songs %d, Num Artitists %d\n",db_song_count(testDB),db_artist_count(testDB));
-    printf("Num between 2000 and 2009: %d",db_count_decade(testDB,2000,NULL));
+    printf("Num between 2000 and 2009: %d\n",db_count_decade(testDB,2000,NULL));
+    //test_db_get(testDB, 0);
+    //test_top_artist(testDB);
 }

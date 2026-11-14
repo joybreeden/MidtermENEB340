@@ -80,7 +80,7 @@ size_t db_song_count(const MusicDB *db){// returns the number of songs in the da
 size_t db_artist_count(const MusicDB *db){//returns the number of songs in the database DONE
     return db->numArtists;
 }
-const Song  *db_get(const MusicDB *db, size_t i){//returns the song at position i if it exists otherwise returns null TODO: Test
+const Song  *db_get(const MusicDB *db, size_t i){//returns the song at position i if it exists otherwise returns null DONE
     if(i < db->numSongs){
         return db->songs[i];
     }
@@ -209,7 +209,7 @@ void db_disp(const MusicDB *db, FILE *out, size_t lim){//DONE
     }
 }
 size_t db_search(const MusicDB *db, song_pred pred, const void *key, const Song ***out){//determines which songs match key based on function pred which is defined by someone else TODO: program
-
+    
 }
 void db_sort(MusicDB *db, int card){//  TODO: Program
     switch(card){
@@ -232,7 +232,7 @@ void db_sort(MusicDB *db, int card){//  TODO: Program
 }
 
 /* PTR-ONLY */
-size_t db_count_decade(const MusicDB *db, int start, const Song **best){// now ptr only TODO: test 
+size_t db_count_decade(const MusicDB *db, int start, const Song **best){// now ptr only DONE
     size_t count = 0;
     double rating = -10;
     Song **song = db->songs;
@@ -249,10 +249,41 @@ size_t db_count_decade(const MusicDB *db, int start, const Song **best){// now p
         }
         song++;
     }
+    
     return count;
 }
 /* PTR-ONLY */
-const Artist *db_top_artist(const MusicDB *db){//returns NULL if db is empty otherwise returns artist with most songs TODO: program also figure out ptr only
-
+const Artist *db_top_artist(const MusicDB *db){//returns NULL if db is empty otherwise returns artist with most songs DONE
+    if(db == NULL || db->numArtists == 0){
+        return NULL;
+    }
+    if(debug)printf("1, ");
+    Artist **artist = db->artists;
+    if(debug)printf("2, ");
+    Artist **lastArtist = db->artists + db->numArtists;
+    if(debug)printf("3, ");
+    int songs = 0;
+    Artist *best = malloc(sizeof(Artist));
+    if(debug)printf("4, ");
+    while(artist < lastArtist){
+        if(debug)printf("5, ");
+        if((*artist)->n_songs > songs){
+            if(debug)printf("6, ");
+            best = (*artist);
+            if(debug)printf("7, ");
+            songs = (*artist)->n_songs;
+        }
+        artist++;
+    }
+    if(debug)printf("%s, %d\n",best->name, best->n_songs);
+    return best;
 }
 
+/*void test_db_get(const MusicDB *db, size_t i){
+    Song *song = db_get(db, i);
+    printf("Song Title: %s, Rating: %f, num_rated: %d", song->title,song->rating, song->num_rated);
+}*/
+/*void test_top_artist(const MusicDB *db){
+    Artist *artist = db_top_artist(db);
+    printf("Name: %s, nSongs: %d",artist->name,artist->n_songs);
+}*/
