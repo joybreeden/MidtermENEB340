@@ -1,8 +1,13 @@
 #include "musicdb.h"
-
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 
 int main(){
-    
+        _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+
 
 
     MusicDB *testDB = db_create();
@@ -32,6 +37,8 @@ int main(){
     
     printf("Num Songs %d, Num Artitists %d\n",db_song_count(testDB),db_artist_count(testDB));
     printf("Num between 2000 and 2009: %d\n",db_count_decade(testDB,2000,NULL));
+    db_destroy(testDB);
+    
     //test_db_get(testDB, 0);
     //test_top_artist(testDB);
 }

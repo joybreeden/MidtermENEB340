@@ -158,8 +158,11 @@ int db_load(MusicDB *db, const char *dir){//THIS IS DESIGNED FOR WINDOWS SYSTEM 
     if(debug)printf("%d\n",lines[0]);
     while (linesRead < lines[0]) {
         if (fgets(temp, sizeof(temp), songs)) {
-            strcpy(title,temp);
-            trim(title);
+            title = malloc(strlen(temp) + 1);
+            if(title != NULL){
+                strcpy(title,temp);
+                trim(title);
+            }
             if(debug)printf("%s, ",title);
         }
         
