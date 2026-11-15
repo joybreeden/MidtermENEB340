@@ -83,6 +83,7 @@ int db_load(MusicDB *db, const char *dir){//THIS IS DESIGNED FOR WINDOWS SYSTEM 
     unsigned long numRatings;
     int linesRead = 0;
     char temp[1000];
+
     snprintf(path, 500, "%s\\%s",dir,"songs.txt");
     FILE *songs = fopen(path, "r");
     snprintf(path, 500, "%s\\%s",dir,"artists.txt");

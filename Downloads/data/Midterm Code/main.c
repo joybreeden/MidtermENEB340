@@ -1,17 +1,45 @@
 #include "musicdb.h"
 #include <stdlib.h>
- int pred(const Song *s, const void *key){
 
-        if(s->rating >= 3.70 && s->num_rated >=1000000){
+
+static double sRating;
+static unsigned long sNum;
+ int pred(const Song *s, const void *key){
+    int num = *(int*)key;
+    switch (num){
+    case 0:
+        sRating = 3.70;
+        sNum = 1000000;  
+    break;
+    case 1:
+        sRating = 3.90;
+        sNum = 1100000;
+    break;
+    case 2:
+        sRating = 4.10;
+        sNum = 1200000;
+    break;
+    case 3:
+        sRating = 4.30;
+        sNum = 1300000;
+    break;
+    default:
+        sRating = 4.50;
+        sNum = 1400000;
+    break;
+    
+    }
+    if(s->rating >= sRating && s->num_rated >=sNum){
             return 1;
         }else{
             return 0;
-        }
-        (void)key;
     }
+        
+           
+ }
 int main(int arg, char*args[]){
     if(arg != 3){
-        printf("./musicdb_report data 'student id'");
+        printf("./musicdb_report direcotry 'student id'");
         return 1;
     }
     printf("ENEB 340 Report\n");
@@ -48,8 +76,8 @@ int main(int arg, char*args[]){
     size_t count = db_count_decade(db,1960,&s);
     printf("[D] Q1 decade=%d count=%zu best_id=%u best_title=%s\n",1960,count,s->id,s->title);
     const Song **ss = NULL;
-    int i = db_search(db,pred,&i,&ss);
-    printf("[D] Q2 rating>=4.50 rated>=1400000 count=%d first_id=%u last_id=%u\n",i,ss[0]->id,ss[i-1]->id);
+    int i = db_search(db,pred,&D,&ss);
+    printf("[D] Q2 rating>=%.2f rated>=%ld count=%d first_id=%u last_id=%u\n",sRating,sNum,i,ss[0]->id,ss[i-1]->id);
     free((void *)ss);
     ss=NULL;
     db_sort(db, S);
